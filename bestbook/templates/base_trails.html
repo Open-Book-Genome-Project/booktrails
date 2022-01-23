@@ -1,0 +1,83 @@
+
+<html>
+  <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@200&display=swap" rel="stylesheet">
+    <style type="text/css">
+      html, body {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      margin: 0;
+      padding: 0;
+      }
+      .nav {
+      color: white;
+      background: #4C5667;
+      padding: 5px;
+      display: flex;
+      }
+      .nav h1 {
+      margin: 5px;
+      flex: 1;
+      }
+      a.cta {
+      border-radius: 5px;
+      background-color: blue;
+      color: white;
+      text-decoration: none;
+      padding: 5px;
+      }
+      .account-dropdown {
+      display: inline-block;
+      }
+
+      .account-dropdown ul {
+      position: fixed;
+      right: 0px;
+      border-radius: 3px;
+      background: #fff;
+      z-index: 999;
+      border: 2px solid #A2A5AA;
+      margin: 5px;
+      }
+
+      .bookcover {
+        height: 175px;
+      }
+      .selected {
+        background-color: #ffffbb;
+      }
+      .forks {
+        display: flex;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="nav">
+      <h1>Booktrails</h1>
+      {% if not session.get('username') %}
+        <a href="/login">login</a> or
+        <a href="https://openlibrary.org/account/create">register</a>
+        {% endif %}
+        {% if session.get('username') %}
+          <details class="account-dropdown">
+            <summary>
+              {{session.get('username')}}
+            </summary>
+            
+            <ul>
+              <li><a href="/logout">logout</a></li>
+            </ul>
+          </details>
+        {% endif %}
+    </div>
+
+    <div>
+      {% include template %}
+    </div>
+    <footer>
+
+    </footer>
+  </body>
+</html>
+

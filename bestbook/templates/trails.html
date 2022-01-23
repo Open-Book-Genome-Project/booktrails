@@ -1,41 +1,42 @@
-
-<html>
-  <head>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@200&display=swap" rel="stylesheet">
-    <style type="text/css">
-      html, body {
-      font-family: 'Be Vietnam Pro', sans-serif;
-      margin: 0;
-      padding: 0;
-      }
-      .nav {
-      color: white;
-      background: #4C5667;
-      padding: 5px;
-      }
-      .nav h1 {
-      margin: 5px;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="nav">
-      <h1>Booktrails</h1>
-    </div>
-
-    <div>
-      <h2>Math Sequence</h2>
-      <ul>
-      {% for s in ['OL102147W', 'OL3502985W', 'OL4278833W'] %}
-        <li>{{ s }}</li>
-	{% endfor %}
-	</ul>
-    </div>
-    <footer>
-
-    </footer>
-  </body>
-</html>
-
+{% if session.get('username') %}
+<form method="POST" action="/">
+  <input name="submitter" value="{{session.get('username')}}" placeholder="submitter">
+  <input name="book_olid" placeholder="Book olid">
+  <input name="prereq_olid" placeholder="Prereq olid">
+  <input name="weight" value="1" placeholder="Weight">
+  <input type="submit">
+</form>
+{% endif %}
+<ul>
+  {% for level in trailmap['trailmap'] %}
+    <li class="forks">
+      <div>Level {{loop.index}}</div>
+      {% for edge in level %}
+      <div {{ 'class=selected' if loop.index == 1}}>
+        {% set book = trailmap["book_data"][edge.book_olid] %}
+        {% set availability = book.get('availability', {}) %}
+        <a href="/book/{{ edge['book_olid'] }}">
+          <img class="bookcover"
+               src="//covers.openlibrary.org/b/olid/{{ book.cover_edition_key }}-M.jpg">
+        </a>
+        <h3>
+          <a href="https://openlibrary.org/works/{{ edge['book_olid'] }}">{{ book.title }}</a>
+        </h3>
+        {% if availability.get('status') and availability.get('status') != 'error' %}
+          <div class="read-options">
+            <a href="https://openlibrary.org/borrow/ia/{{ availability.get('identifier') }}?ref=ol"
+               class="cta">
+              {{ availability.get('status') }}
+            </a>
+          </div>
+        {% endif %}
+          {% if loop.index < 4 %}
+            {{ ["🥇", "🥈", "🥉"][loop.index - 1]}}
+          {% endif %}
+          {{ edge['count'] }} ❤️
+      </div>
+    {% endfor %}
+    </li>
+  {% endfor %}
+</ul>
+      
