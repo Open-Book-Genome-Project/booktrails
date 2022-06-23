@@ -6,26 +6,22 @@
     ~~~~~~
 
     :copyright: (c) 2022 Open Book Genome Project
-    :license: BSD, see LICENSE for more details.
+    :license: AGPL3, see LICENSE for more details.
 """
 
 from flask import Flask, render_template
 from flask.views import MethodView
 from flask_routing import router
-from flask_cors import CORS
-from views.auth import Login
-
-class Home(MethodView):
-    def get(self):
-        return render_template("index.html", app_name="BookTrails")
+from configs import SECRET_KEY, OPTIONS
+import views
     
 urls = (
-    '/', Home,
-    '/login', Login,
+    '/', views.Home,
+    '/login', views.auth.Login,
 )
 
 app = router(Flask(__name__), urls)
+app.secret_key = SECRET_KEY
 
 if __name__ == "__main__":
-    app.run()
-
+    app.run(**OPTIONS)
